@@ -1,7 +1,7 @@
 /**
- * article-writer.js - Terse core implementation for generating articles using Flowkit
+ * article-writer.js - Terse core implementation for generating articles using Flowlite
  */
-import { Flow, registerTool } from '../../flowkit.js';
+import { Flow, registerTool } from '../../flowlite.js';
 import { callLLM, promptTemplate, jsonParser } from '../../tools.js';
 import fs from 'fs/promises';
 import path from 'path';

@@ -1,18 +1,18 @@
 {
-  "name": "flowkit",
+  "name": "flowlite",
   "version": "1.0.0",
   "description": "A lightweight, composable JavaScript framework for building LLM-powered agent flows",
-  "main": "flowkit.js",
+  "main": "flowlite.js",
   "type": "module",
   "files": [
-    "flowkit.js",
+    "flowlite.js",
     "tools.js",
     "memory.js",
     "README.md",
     "LICENSE"
   ],
   "exports": {
-    ".": "./flowkit.js",
+    ".": "./flowlite.js",
     "./tools": "./tools.js",
     "./memory": "./memory.js"
   },
@@ -32,7 +32,9 @@
     "workflow",
     "chain",
     "langchain",
-    "gpt"
+    "gpt",
+    "lightweight",
+    "easy"
   ],
   "author": "Chad Jones <chadananda@gmail.com>",
   "license": "MIT",

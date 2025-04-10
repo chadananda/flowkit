@@ -1,5 +1,5 @@
 {
-  "name": "flowkit-article-writer",
+  "name": "flowlite-article-writer",
   "version": "1.0.0",
   "description": "Generate high-quality articles with AI assistance",
   "main": "article-writer.js",
@@ -12,13 +12,13 @@
     "test": "vitest run"
   },
   "keywords": [
-    "flowkit",
+    "flowlite",
     "article",
     "writer",
     "ai",
     "content"
   ],
-  "author": "",
+  "author": "Chad Jones <chadananda@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",

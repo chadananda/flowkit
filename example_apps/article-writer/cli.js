@@ -34,7 +34,7 @@ const displayTitle = () => {
     console.log(chalk.bold.blue('=== ArticleWriter ==='));
   }
   
-  console.log('\n' + chalk.bold.cyan('✨ Powered by Flowkit ✨') + '\n');
+  console.log('\n' + chalk.bold.cyan('✨ Powered by Flowlite ✨') + '\n');
   console.log(chalk.italic.gray('Generate high-quality articles with AI assistance\n'));
 };
 

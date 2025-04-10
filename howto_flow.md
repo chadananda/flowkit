@@ -1,94 +1,72 @@
-# Flowkit: How to Build LLM-Powered Agent Flows
+# Flowlite Development Guide
 
-## Code Style Preferences
+This guide provides best practices and patterns for developing with the Flowlite framework.
 
-When building applications with Flowkit, follow these code style guidelines:
+## Core Concepts
 
-- **Compact Code**: Write terse, compact code without unnecessary empty lines inside functions
-- **Modern JavaScript**: Use ES modules and modern features (arrow functions, destructuring, async/await, etc.)
-- **Inline Exports**: Prefer inline exports when possible
-- **Method Chaining**: Utilize method chaining for cleaner, more readable code
-- **Minimal Whitespace**: Minimize whitespace while maintaining readability
-- **No CommonJS**: Use ES modules (`import`/`export`) rather than CommonJS (`require`/`module.exports`)
+### Flows
 
-### Style Examples
-
-#### Preferred Style (Compact and Modern)
+Flows are the central concept in Flowlite. A flow is a sequence of steps (nodes) that process data and transform state.
 
 ```javascript
-// Compact, chained flow with modern JS features
-export const generateResponse = async (input) => {
-  const flow = Flow.start(parseInput)
-    .next(async state => ({...state, enhanced: await enhanceContext(state.text)}))
-    .next(generateOutput)
-    .onPrompt("Should this response be formal?", 
-      state => ({...state, style: "formal"}),
-      state => ({...state, style: "casual"}));
-  return await flow.run({text: input});
-};
+import { Flow } from 'flowlite';
 
-// Tool registration with destructuring and arrow functions
-export const registerTools = () => {
-  const fetchData = registerTool(async ({url, params}) => {
-    const response = await fetch(url, {method: 'GET', params});
-    return response.ok ? await response.json() : {error: response.statusText};
-  });
-  
-  const processText = registerTool(text => ({
-    wordCount: text.split(/\s+/).length,
-    sentiment: analyzeSentiment(text),
-    entities: extractEntities(text)
-  }));
-  
-  return {fetchData, processText};
-};
+// Create a simple flow
+const myFlow = Flow.start(initialStep)
+  .next(processData)
+  .next(generateOutput);
 
-// Flow composition with chaining
-const createWorkflow = (initialPrompt) => Flow.start(state => ({...state, prompt: initialPrompt}))
-  .next(callLLM)
-  .next(parseResponse)
-  .on('error', handleError)
-  .on('success', saveResult);
+// Run the flow with initial state
+const result = await myFlow.run({ input: 'Hello, world!' });
 ```
 
-#### Avoid This Style
+### Nodes
+
+Nodes are the building blocks of flows. Each node is a function that:
+1. Receives the current state
+2. Performs some operation
+3. Returns a new state or modifications to the existing state
 
 ```javascript
-// Too verbose with unnecessary whitespace and lines
-export function generateResponse(input) {
-  
-  // Create the flow
-  const flow = Flow.start(function(state) {
-    return parseInput(state);
-  });
-  
-  // Add the next step
-  flow.next(async function(state) {
-    const enhanced = await enhanceContext(state.text);
-    
-    return {
-      ...state,
-      enhanced: enhanced
-    };
-  });
-  
-  // Add output generation
-  flow.next(function(state) {
-    return generateOutput(state);
-  });
-  
-  // Run the flow
-  return flow.run({
-    text: input
-  });
-}
+// Simple node function
+const greet = (state) => {
+  return { 
+    ...state,
+    greeting: `Hello, ${state.name || 'world'}!` 
+  };
+};
 ```
 
-These style preferences help create clean, maintainable, and efficient Flowkit applications.
+### Branching
+
+Flowlite supports conditional branching based on the output of nodes:
+
+```javascript
+const analyzeIntent = (state) => {
+  if (state.query.includes('weather')) return 'weather';
+  if (state.query.includes('news')) return 'news';
+  return 'unknown';
+};
+
+const flow = Flow.start(analyzeIntent)
+  .on('weather', getWeatherInfo)
+  .on('news', getNewsUpdates)
+  .on('unknown', handleUnknownIntent);
+```
+
+### Parallel Execution
+
+For operations that can run independently, use parallel execution:
+
+```javascript
+const flow = Flow.start()
+  .all([fetchUserData, fetchUserPreferences, fetchRecommendations])
+  .next(combineResults);
+```
 
 ## CLI Tool Styling Guidelines
 
-When creating CLI tools for Flowkit applications, follow these guidelines to ensure a consistent, professional look and feel across all tools:
+When creating CLI tools for Flowlite applications, follow these guidelines to ensure a consistent, professional look and feel across all tools:
 
 ### 1. Visual Identity
 
@@ -153,7 +131,7 @@ const displayTitle = () => {
   } catch (error) {
     console.log(chalk.bold.blue('=== ToolName ==='));
   }
-  console.log('\n' + chalk.bold.cyan('✨ Powered by Flowkit ✨') + '\n');
+  console.log('\n' + chalk.bold.cyan('✨ Powered by Flowlite ✨') + '\n');
 };
 
 // Setup CLI program
@@ -178,7 +156,7 @@ async function main() {
 main();
 ```
 
-By following these guidelines, you'll create CLI tools that are not only functional but also provide a delightful user experience with a consistent look and feel across all Flowkit applications.
+By following these guidelines, you'll create CLI tools that are not only functional but also provide a delightful user experience with a consistent look and feel across all Flowlite applications.
 
 ## Table of Contents
 
@@ -195,7 +173,7 @@ By following these guidelines, you'll create CLI tools that are not only functio
 
 ## Core Concepts
 
-Flowkit is built around a few key concepts:
+Flowlite is built around a few key concepts:
 
 - **Nodes**: Units of work that process state and return results
 - **Flows**: Sequences of nodes that define a workflow
@@ -209,13 +187,13 @@ The framework uses a chainable API to create readable, maintainable workflows.
 ### Installation
 
 ```bash
-npm install flowkit
+npm install flowlite
 ```
 
 ### Basic Usage
 
 ```javascript
-import { Flow } from 'flowkit';
+import { Flow } from 'flowlite';
 
 // Define a simple function
 const greet = (state) => {
@@ -225,8 +203,8 @@ const greet = (state) => {
 
 // Create and run a flow
 const flow = Flow.start(greet);
-flow.run({ name: 'Flowkit' });
-// Output: Hello, Flowkit!
+flow.run({ name: 'Flowlite' });
+// Output: Hello, Flowlite!
 ```
 
 ## Creating and Using Tools
@@ -236,7 +214,7 @@ flow.run({ name: 'Flowkit' });
 Tools are functions with metadata that describe their purpose and parameters.
 
 ```javascript
-import { registerTool } from 'flowkit';
+import { registerTool } from 'flowlite';
 
 // Create a simple tool
 const fetchData = registerTool(
@@ -271,12 +249,12 @@ parameters: ['required', 'optional?']
 
 ### Built-in Tools
 
-Flowkit provides several built-in tools:
+Flowlite provides several built-in tools:
 
 #### LLM Tools
 
 ```javascript
-import { callLLM, promptTemplate } from 'flowkit/tools';
+import { callLLM, promptTemplate } from 'flowlite/tools';
 
 // Call an LLM with structured parameters
 const response = await callLLM({
@@ -290,15 +268,15 @@ const response = await callLLM({
 // Use a template with variable substitution
 const prompt = promptTemplate(
   'Hello, {{name}}! Welcome to {{service}}.',
-  { name: 'User', service: 'Flowkit' }
+  { name: 'User', service: 'Flowlite' }
 );
-// Result: "Hello, User! Welcome to Flowkit."
+// Result: "Hello, User! Welcome to Flowlite."
 ```
 
 #### Data Processing Tools
 
 ```javascript
-import { jsonParser, textChunker } from 'flowkit/tools';
+import { jsonParser, textChunker } from 'flowlite/tools';
 
 // Extract JSON from text
 const json = jsonParser('Here is some data: {"key": "value"}');
@@ -314,7 +292,7 @@ const chunks = textChunker(longText, {
 #### Memory Tools
 
 ```javascript
-import { createMemoryStore, createConversationMemory } from 'flowkit/memory';
+import { createMemoryStore, createConversationMemory } from 'flowlite/memory';
 
 // Create a simple key-value store
 const memory = createMemoryStore();
@@ -333,7 +311,7 @@ const messages = conversation.getMessages();
 ### Creating a Flow
 
 ```javascript
-import { Flow, Node } from 'flowkit';
+import { Flow, Node } from 'flowlite';
 
 // Create nodes
 const fetchData = new Node('fetchData', async (state) => {
@@ -477,7 +455,7 @@ const result = await userFlow.run({ userId: '12345' });
 ### Basic LLM Calls
 
 ```javascript
-import { callLLM } from 'flowkit/tools';
+import { callLLM } from 'flowlite/tools';
 
 const generateResponse = async (state) => {
   const response = await callLLM({
@@ -490,7 +468,7 @@ const generateResponse = async (state) => {
 };
 
 const flow = Flow.start(generateResponse);
-const result = await flow.run({ input: 'Tell me about Flowkit' });
+const result = await flow.run({ input: 'Tell me about Flowlite' });
 ```
 
 ### Structured Output with Schema
@@ -513,7 +491,7 @@ const analyzeText = async (state) => {
 ### Using Prompt Templates
 
 ```javascript
-import { promptTemplate } from 'flowkit/tools';
+import { promptTemplate } from 'flowlite/tools';
 
 const generatePersonalizedEmail = async (state) => {
   const prompt = promptTemplate(
@@ -538,7 +516,7 @@ const generatePersonalizedEmail = async (state) => {
 ### Using Memory Store
 
 ```javascript
-import { createMemoryStore } from 'flowkit/memory';
+import { createMemoryStore } from 'flowlite/memory';
 
 // Create a memory store
 const memory = createMemoryStore();
@@ -569,7 +547,7 @@ const result = await retrieveFlow.run({});
 ### Conversation Memory
 
 ```javascript
-import { createConversationMemory } from 'flowkit/memory';
+import { createConversationMemory } from 'flowlite/memory';
 
 // Create conversation memory
 const conversation = createConversationMemory({ maxMessages: 10 });
@@ -609,7 +587,7 @@ await chatFlow.run({ message: 'Hello!' });
 ### AI-Generated Flow Planning
 
 ```javascript
-import { Flow, registerTool } from 'flowkit';
+import { Flow, registerTool } from 'flowlite';
 
 // Register tools
 const searchTool = registerTool(/* ... */);
@@ -628,7 +606,7 @@ await planningFlow.run({});
 ### Custom Node Creation
 
 ```javascript
-import { Node } from 'flowkit';
+import { Node } from 'flowlite';
 
 // Create a node with custom behavior
 const retryNode = new Node('retryOperation', async (state) => {
@@ -774,9 +752,9 @@ const adminFlow = Flow.start(authenticate)
 ### Conversational Agent
 
 ```javascript
-import { Flow, registerTool } from 'flowkit';
-import { callLLM, promptTemplate } from 'flowkit/tools';
-import { createConversationMemory, createMemoryStore } from 'flowkit/memory';
+import { Flow, registerTool } from 'flowlite';
+import { callLLM, promptTemplate } from 'flowlite/tools';
+import { createConversationMemory, createMemoryStore } from 'flowlite/memory';
 
 // Create memory stores
 const memory = createMemoryStore();
@@ -890,8 +868,8 @@ console.log(result.response);
 ### Article Generator
 
 ```javascript
-import { Flow, registerTool } from 'flowkit';
-import { callLLM, promptTemplate } from 'flowkit/tools';
+import { Flow, registerTool } from 'flowlite';
+import { callLLM, promptTemplate } from 'flowlite/tools';
 
 // Register tools
 const researchTool = registerTool(
@@ -1055,8 +1033,8 @@ console.log(result.finalDraft); // The final article
 
 ## Conclusion
 
-Flowkit provides a powerful yet simple framework for building LLM-powered agent flows. By combining nodes, flows, tools, and state management, you can create sophisticated applications that leverage the capabilities of large language models.
+Flowlite provides a powerful yet simple framework for building LLM-powered agent flows. By combining nodes, flows, tools, and state management, you can create sophisticated applications that leverage the capabilities of large language models.
 
-This guide covers the essentials of working with Flowkit, but the framework is designed to be flexible and extensible. As you become more familiar with it, you can create increasingly complex and powerful applications.
+This guide covers the essentials of working with Flowlite, but the framework is designed to be flexible and extensible. As you become more familiar with it, you can create increasingly complex and powerful applications.
 
-For more examples and detailed API documentation, refer to the other files in the Flowkit repository.
+For more examples and detailed API documentation, refer to the other files in the Flowlite repository.

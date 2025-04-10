@@ -1,5 +1,5 @@
 /**
- * Flowkit - A Minimal, Composable Framework for Building LLM-Powered Agent Flows
+ * Flowlite - A Lightweight, Composable Framework for Building LLM-Powered Agent Flows
  * Enables structured, chainable agent workflows with branching, parallel execution, and state management
  */
 
@@ -144,7 +144,7 @@ First, provide a high-level plan with these components:
 2. Steps: The sequence of operations needed
 3. Output: The expected final result
 
-Then, provide the flow as executable JavaScript code using the Flowkit framework.
+Then, provide the flow as executable JavaScript code using the Flowlite framework.
 
 Use this format:
 \`\`\`

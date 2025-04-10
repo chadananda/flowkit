@@ -1,10 +1,10 @@
-# 📝 Flowkit Article Writer ✨
+# 📝 Flowlite Article Writer ✨
 
 <div align="center">
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=flat-square)
 ![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)
-![Flowkit](https://img.shields.io/badge/powered%20by-Flowkit-orange.svg?style=flat-square)
+![Flowlite](https://img.shields.io/badge/powered%20by-Flowlite-orange.svg?style=flat-square)
 
 **Supercharge your content creation with AI-powered article generation!**
 
@@ -84,7 +84,7 @@ graph LR
 
 </div>
 
-The article writer demonstrates Flowkit's powerful chainable workflow capabilities:
+The article writer demonstrates Flowlite's powerful chainable workflow capabilities:
 
 1. 🔍 **Research** - Gathers factual information via Perplexity API (with LLM fallback)
 2. 📋 **Outline Creation** - Generates structured outline based on research
@@ -97,7 +97,7 @@ The article writer demonstrates Flowkit's powerful chainable workflow capabiliti
 
 ## 💻 Flow Implementation
 
-The application showcases Flowkit's elegant chaining capabilities:
+The application showcases Flowlite's elegant chaining capabilities:
 
 ```javascript
 Flow.start(analyzeRequest)
@@ -185,7 +185,7 @@ AI-powered tools can now scan thousands of sources in seconds, extracting releva
 
 ## Contributing
 
-This project is part of the [Flowkit](https://github.com/chadananda/flowkit) framework. Contributions are welcome!
+This project is part of the [Flowlite](https://github.com/chadananda/flowkit) framework. Contributions are welcome!
 
 1. Fork the repository
 2. Create your feature branch: `git checkout -b feature/amazing-feature`
@@ -218,7 +218,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 <div align="center">
 
-### 🌟 Powered by [Flowkit](https://github.com/chadananda/flowkit) 🌟
+### 🌟 Powered by [Flowlite](https://github.com/chadananda/flowkit) 🌟
 
 **Build sophisticated AI workflows with elegant, chainable code**
 

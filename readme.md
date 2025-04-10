@@ -1,10 +1,10 @@
-# Flowkit
+# Flowlite
 
 A lightweight, composable JavaScript framework for building LLM-powered agent flows.
 
-## 🔎 Overview
+## Overview
 
-Flowkit is a modern JavaScript framework that makes it easy to build structured, chainable workflows for LLM-powered agents. It provides a clean, concise syntax for defining complex flows while maintaining readability and flexibility.
+Flowlite is a modern JavaScript framework that makes it easy to build structured, chainable workflows for LLM-powered agents. It provides a clean, concise syntax for defining complex flows while maintaining readability and flexibility.
 
 Key features:
 - **Simple, chainable API** - Build flows with minimal code
@@ -14,18 +14,18 @@ Key features:
 - **Parallel execution** - Run tasks concurrently for efficiency
 - **Branching logic** - Create conditional paths based on results
 
-## 🚀 Installation
+## Installation
 
 ```bash
-npm install flowkit
+npm install flowlite
 ```
 
-## 🧪 Hello World Example
+## Hello World Example
 
 Let's start with a simple "hello world" example:
 
 ```js
-import { Flow } from 'flowkit';
+import { Flow } from 'flowlite';
 
 // Define a simple greeter function
 const greet = (state) => {
@@ -35,18 +35,18 @@ const greet = (state) => {
 
 // Create and run a flow
 const flow = Flow.start(greet);
-flow.run({ name: 'Flowkit' });
-// Output: Hello, Flowkit!
+flow.run({ name: 'Flowlite' });
+// Output: Hello, Flowlite!
 ```
 
-## 🌟 Basic Concepts
+## Basic Concepts
 
 ### Nodes and Flows
 
-The core building blocks of Flowkit are **Nodes** (units of work) and **Flows** (sequences of nodes):
+The core building blocks of Flowlite are **Nodes** (units of work) and **Flows** (sequences of nodes):
 
 ```js
-import { Node, Flow } from 'flowkit';
+import { Node, Flow } from 'flowlite';
 
 // Create nodes
 const fetchData = new Node('fetchData', async (state) => {
@@ -73,7 +73,7 @@ dataFlow.run({ id: '12345' });
 Flows can branch based on the output of nodes:
 
 ```js
-import { Flow } from 'flowkit';
+import { Flow } from 'flowlite';
 
 const analyzeInput = (state) => {
   if (state.text.includes('question')) return 'question';
@@ -105,13 +105,13 @@ console.log(result.response);
 // Output: To answer your question: Can you answer a question for me?
 ```
 
-## 🔧 Working with LLMs
+## Working with LLMs
 
-Flowkit includes built-in tools for working with LLMs:
+Flowlite includes built-in tools for working with LLMs:
 
 ```js
-import { Flow } from 'flowkit';
-import { callLLM, promptTemplate } from 'flowkit/tools';
+import { Flow } from 'flowlite';
+import { callLLM, promptTemplate } from 'flowlite/tools';
 
 const generateResponse = async (state) => {
   const prompt = promptTemplate(
@@ -134,13 +134,13 @@ const result = await chatFlow.run({ input: 'Tell me a joke about programming' })
 console.log(result.response);
 ```
 
-## 📚 Memory Management
+## Memory Management
 
-Flowkit provides memory tools for maintaining state across interactions:
+Flowlite provides memory tools for maintaining state across interactions:
 
 ```js
-import { Flow } from 'flowkit';
-import { createMemoryStore } from 'flowkit/memory';
+import { Flow } from 'flowlite';
+import { createMemoryStore } from 'flowlite/memory';
 
 // Create a memory store
 const memory = createMemoryStore();
@@ -165,12 +165,12 @@ const result = await retrieveFlow.run({});
 console.log(result.greeting); // Output: Hello again, Alice!
 ```
 
-## 🧩 Tool Registry and Planning
+## Tool Registry and Planning
 
-Flowkit allows you to register tools and use them in your flows:
+Flowlite allows you to register tools and use them in your flows:
 
 ```js
-import { Flow, registerTool } from 'flowkit';
+import { Flow, registerTool } from 'flowlite';
 
 // Register a simple hello world tool
 const helloWorldTool = registerTool(
@@ -196,19 +196,19 @@ const plannerFlow = Flow.start((state) => {
 
 const result = await plannerFlow.run({ 
   needsGreeting: true, 
-  name: 'Flowkit User' 
+  name: 'Flowlite User' 
 });
 
 console.log(result);
-// Output: { result: 'Hello, Flowkit User!', toolUsed: 'helloWorld' }
+// Output: { result: 'Hello, Flowlite User!', toolUsed: 'helloWorld' }
 ```
 
-## 🔄 Parallel Execution
+## Parallel Execution
 
 Run multiple tasks in parallel:
 
 ```js
-import { Flow } from 'flowkit';
+import { Flow } from 'flowlite';
 
 const fetchUserData = async (state) => {
   const response = await fetch(`/api/users/${state.userId}`);
@@ -237,14 +237,14 @@ const result = await userFlow.run({ userId: '12345' });
 console.log(result.user);
 ```
 
-## 🌐 Complete Example: Weather Assistant
+## Complete Example: Weather Assistant
 
-Here's a more complete example that demonstrates several Flowkit features:
+Here's a more complete example that demonstrates several Flowlite features:
 
 ```js
-import { Flow, registerTool } from 'flowkit';
-import { callLLM, promptTemplate, jsonParser } from 'flowkit/tools';
-import { createMemoryStore } from 'flowkit/memory';
+import { Flow, registerTool } from 'flowlite';
+import { callLLM, promptTemplate, jsonParser } from 'flowlite/tools';
+import { createMemoryStore } from 'flowlite/memory';
 
 // Create a memory store
 const memory = createMemoryStore();
@@ -309,13 +309,13 @@ const result = await weatherFlow.run({
 console.log(result.response);
 ```
 
-## 📖 Documentation
+## Documentation
 
-For more detailed documentation, examples, and API reference, visit our [documentation site](https://flowkit.dev/docs).
+For more detailed documentation, examples, and API reference, visit our [documentation site](https://flowlite.dev/docs).
 
-## 🔬 Example Applications
+## Example Applications
 
-Flowkit includes several example applications to demonstrate its capabilities:
+Flowlite includes several example applications to demonstrate its capabilities:
 
 ### Article Writer
 
@@ -323,7 +323,7 @@ A CLI tool for generating high-quality articles with AI assistance. Features inc
 - Research-based article generation
 - SEO and copywriting quality checks
 - Fancy CLI interface with ASCII art and colors
-- Structured workflow using Flowkit's Flow API
+- Structured workflow using Flowlite's Flow API
 
 To try it out:
 ```bash
@@ -334,7 +334,7 @@ npm start
 
 See the [Article Writer README](./example_apps/article-writer/README.md) for more details.
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
@@ -344,6 +344,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch: `git push origin feature/amazing-feature`
 5. Open a Pull Request
 
-## 📄 License
+## License
 
 MIT
