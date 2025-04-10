@@ -1,4 +1,4 @@
-# 📝 Flowlite Article Writer ✨
+# Flowlite Article Writer
 
 <div align="center">
 
@@ -8,22 +8,22 @@
 
 **Supercharge your content creation with AI-powered article generation!**
 
-🔍 Research → 📋 Outline → ✍️ Write → 🚀 Optimize → 💯 Publish
+Research → Outline → Write → Optimize → Publish
 
 </div>
 
 ---
 
-## ✨ Features
+## Features
 
-- 🧠 **AI-Powered Research** - Automatically gathers facts via Perplexity API
-- 🔍 **SEO Optimization** - Analyzes and improves content for search visibility
-- ✍️ **Professional Copywriting** - Ensures engaging, well-written content
-- 📊 **Quality Scoring** - Provides detailed SEO and readability metrics
-- 📝 **Beautiful Markdown** - Generates perfectly formatted articles with metadata
-- ⚡ **Lightning Fast** - Creates publish-ready content in minutes, not hours
+- **AI-Powered Research** - Automatically gathers facts via Perplexity API
+- **SEO Optimization** - Analyzes and improves content for search visibility
+- **Professional Copywriting** - Ensures engaging, well-written content
+- **Quality Scoring** - Provides detailed SEO and readability metrics
+- **Beautiful Markdown** - Generates perfectly formatted articles with metadata
+- **Lightning Fast** - Creates publish-ready content in minutes, not hours
 
-## 🛠️ Installation
+## Installation
 
 ```bash
 # Clone the repository
@@ -38,7 +38,7 @@ cp .env-example .env
 # Edit .env with your API keys
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 # Run the article writer
@@ -46,19 +46,19 @@ npm start
 ```
 
 <details>
-<summary>📋 The interactive CLI will guide you through the process</summary>
+<summary>The interactive CLI will guide you through the process</summary>
 
 You'll be prompted for:
-- 📌 Article title
-- 🔍 Main topic
-- 👥 Target audience
-- 🏷️ Keywords
-- 🎭 Tone (Informative, Conversational, Professional)
-- 📏 Word count
+- Article title
+- Main topic
+- Target audience
+- Keywords
+- Tone (Informative, Conversational, Professional)
+- Word count
 
 </details>
 
-## ⚙️ How It Works
+## How It Works
 
 <div align="center">
 
@@ -86,16 +86,16 @@ graph LR
 
 The article writer demonstrates Flowlite's powerful chainable workflow capabilities:
 
-1. 🔍 **Research** - Gathers factual information via Perplexity API (with LLM fallback)
-2. 📋 **Outline Creation** - Generates structured outline based on research
-3. 🔎 **SEO Check (Outline)** - Analyzes outline for search optimization
-4. ✍️ **Copywriting Check (Outline)** - Ensures engaging structure and flow
-5. 📝 **Content Generation** - Creates full article based on optimized outline
-6. 📊 **Copywriting Check (Content)** - Improves readability and engagement
-7. 🚀 **SEO Check (Content)** - Optimizes for search visibility
-8. 💾 **Output** - Saves as Markdown with metadata
+1. **Research** - Gathers factual information via Perplexity API (with LLM fallback)
+2. **Outline Creation** - Generates structured outline based on research
+3. **SEO Check (Outline)** - Analyzes outline for search optimization
+4. **Copywriting Check (Outline)** - Ensures engaging structure and flow
+5. **Content Generation** - Creates full article based on optimized outline
+6. **Copywriting Check (Content)** - Improves readability and engagement
+7. **SEO Check (Content)** - Optimizes for search visibility
+8. **Output** - Saves as Markdown with metadata
 
-## 💻 Flow Implementation
+## Flow Implementation
 
 The application showcases Flowlite's elegant chaining capabilities:
 
@@ -111,41 +111,41 @@ Flow.start(analyzeRequest)
   .next(finalizeArticle)
 ```
 
-## 🔑 Environment Variables
+## Environment Variables
 
 ```
-# 🔐 OpenAI API Key for GPT models
+# OpenAI API Key for GPT models
 OPENAI_API_KEY=your_openai_api_key_here
 
-# 🤖 Anthropic API Key for Claude models (optional)
+# Anthropic API Key for Claude models (optional)
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
-# 🔍 Perplexity API Key for research
+# Perplexity API Key for research
 PERPLEXITY_API_KEY=your_perplexity_api_key_here
 
-# ⚙️ Default model to use
+# Default model to use
 DEFAULT_MODEL=gpt-4
 
-# 🌡️ Default temperature setting (0.0 - 1.0)
+# Default temperature setting (0.0 - 1.0)
 DEFAULT_TEMPERATURE=0.7
 
-# 📂 Output directory for generated articles
+# Output directory for generated articles
 OUTPUT_DIR=./articles
 ```
 
-## 🧪 Development
+## Development
 
 ```bash
 # Run tests
 npm test
 ```
 
-## 📄 Example Output
+## Example Output
 
 Articles are saved as beautiful Markdown files with frontmatter:
 
 <details>
-<summary>📝 View sample article output</summary>
+<summary>View sample article output</summary>
 
 ```markdown
 ---
@@ -169,29 +169,29 @@ AI-powered tools can now scan thousands of sources in seconds, extracting releva
 
 </details>
 
-## 🔄 Extending
+## Extending
 
 <details>
-<summary>💡 Ways to extend this application</summary>
+<summary>Ways to extend this application</summary>
 
-- 🔌 Add new quality checks in the flow
-- 🌐 Implement additional research sources
-- 📦 Create output formats beyond Markdown
-- 🔄 Add publishing capabilities to WordPress, Medium, etc.
-- 📱 Build a web interface with real-time previews
-- 📊 Add analytics for content performance tracking
+- Add new quality checks in the flow
+- Implement additional research sources
+- Create output formats beyond Markdown
+- Add publishing capabilities to WordPress, Medium, etc.
+- Build a web interface with real-time previews
+- Add analytics for content performance tracking
 
 </details>
 
 ## Contributing
 
-This project is part of the [Flowlite](https://github.com/chadananda/flowkit) framework. Contributions are welcome!
+This project is part of the [Flowlite](https://github.com/chadananda/flowlite) framework. Contributions are welcome!
 
 1. Fork the repository
 2. Create your feature branch: `git checkout -b feature/amazing-feature`
 3. Commit your changes: `git commit -m 'Add some amazing feature'`
 4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
+5. Open a Pull Request at https://github.com/chadananda/flowlite/pulls
 
 ### Development Setup
 
@@ -218,7 +218,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 <div align="center">
 
-### 🌟 Powered by [Flowlite](https://github.com/chadananda/flowkit) 🌟
+### Powered by [Flowlite](https://github.com/chadananda/flowlite)
 
 **Build sophisticated AI workflows with elegant, chainable code**
 

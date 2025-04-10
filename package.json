@@ -40,12 +40,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chadananda/flowkit.git"
+    "url": "git+https://github.com/chadananda/flowlite.git"
   },
   "bugs": {
-    "url": "https://github.com/chadananda/flowkit/issues"
+    "url": "https://github.com/chadananda/flowlite/issues"
   },
-  "homepage": "https://github.com/chadananda/flowkit#readme",
+  "homepage": "https://github.com/chadananda/flowlite#readme",
   "devDependencies": {
     "vitest": "^3.1.1"
   },

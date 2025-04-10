@@ -22,12 +22,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chadananda/flowkit.git"
+    "url": "git+https://github.com/chadananda/flowlite.git"
   },
   "bugs": {
-    "url": "https://github.com/chadananda/flowkit/issues"
+    "url": "https://github.com/chadananda/flowlite/issues"
   },
-  "homepage": "https://github.com/chadananda/flowkit/tree/main/example_apps/article-writer#readme",
+  "homepage": "https://github.com/chadananda/flowlite/tree/main/example_apps/article-writer#readme",
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^11.1.0",
