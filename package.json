@@ -1,23 +1,40 @@
 {
   "name": "flowkit",
   "version": "1.0.0",
-  "description": "A Minimal, Composable, and Powerful JS Framework for Building Multi-Component Programs (MCPs)",
+  "description": "A lightweight, composable JavaScript framework for building LLM-powered agent flows",
   "main": "flowkit.js",
   "type": "module",
+  "files": [
+    "flowkit.js",
+    "tools.js",
+    "memory.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./flowkit.js",
+    "./tools": "./tools.js",
+    "./memory": "./memory.js"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "ocr-pdf": "node example_apps/ocr-pdf/index.js",
-    "article-writer": "node example_apps/article-writer/index.js"
+    "article-writer": "node example_apps/article-writer/cli.js"
   },
   "keywords": [
     "flow",
     "framework",
     "llm",
     "agent",
-    "composable"
+    "composable",
+    "ai",
+    "workflow",
+    "chain",
+    "langchain",
+    "gpt"
   ],
-  "author": "",
+  "author": "Chad Jones <chadananda@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,5 +46,8 @@
   "homepage": "https://github.com/chadananda/flowkit#readme",
   "devDependencies": {
     "vitest": "^3.1.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }
