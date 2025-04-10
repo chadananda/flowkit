@@ -1,7 +1,8 @@
 /**
- * article-writer.flow.js - Ultra-compact flow for generating articles using Flowlite
+ * article-writer.flow.js - Ultra-compact flow for generating articles
  */
-import { Flow, LLMTool, APITool, param, ParamType } from '../../flowlite.js';
+import { Flow, Tool, APITool, LLMTool, param, ParamType, LogLevel } from 'flowlite';
+import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';

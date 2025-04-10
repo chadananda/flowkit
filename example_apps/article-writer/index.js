@@ -1,15 +1,23 @@
 #!/usr/bin/env node
 /**
- * index.js - CLI interface for the article-writer flow
+ * Article Writer CLI - Example app using Flowlite
+ * 
+ * Usage: article-writer [options]
  */
-import { generateArticle } from './article-writer.flow.js';
+import dotenv from 'dotenv';
+dotenv.config();
+import { program } from 'commander';
+import { generateArticle, articleWriterFlow } from './article-writer.flow.js';
+import { LogLevel } from 'flowlite';
 import chalk from 'chalk';
 import figlet from 'figlet';
-import { Command } from 'commander';
-import { createInterface } from 'readline/promises';
+import { createInterface } from 'readline';
+import { promisify } from 'util';
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // CLI configuration
-const program = new Command();
 const version = '1.0.0';
 const rl = createInterface({ input: process.stdin, output: process.stdout });
 

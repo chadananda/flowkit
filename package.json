@@ -1,26 +1,25 @@
 {
   "name": "flowlite",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight, composable JavaScript framework for building LLM-powered agent flows",
   "main": "flowlite.js",
   "type": "module",
   "files": [
     "flowlite.js",
-    "tools.js",
-    "memory.js",
+    "flowtools.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "flows"
   ],
   "exports": {
     ".": "./flowlite.js",
-    "./tools": "./tools.js",
-    "./memory": "./memory.js"
+    "./tools": "./flowtools.js"
   },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
     "ocr-pdf": "node example_apps/ocr-pdf/index.js",
-    "article-writer": "node example_apps/article-writer/cli.js"
+    "article-writer": "node example_apps/article-writer/index.js"
   },
   "keywords": [
     "flow",

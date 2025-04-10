@@ -9,7 +9,7 @@ dotenv.config();
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { processPDF, ocrPDFFlow } from './ocr-pdf.flow.js';
-import { LogLevel } from '../../flowlite.js';
+import { LogLevel } from 'flowlite';
 import chalk from 'chalk';
 import figlet from 'figlet';
 

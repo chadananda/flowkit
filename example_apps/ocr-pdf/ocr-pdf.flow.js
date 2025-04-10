@@ -1,7 +1,7 @@
 /**
  * ocr-pdf.flow.js - Ultra-compact flow for OCR processing of PDF files
  */
-import { Flow, Tool, APITool, LLMTool, param, ParamType, LogLevel } from '../../flowlite.js';
+import { Flow, Tool, APITool, LLMTool, param, ParamType, LogLevel } from 'flowlite';
 import { createCanvas } from 'canvas';
 import { createWorker } from 'tesseract.js';
 import vision from '@google-cloud/vision';
