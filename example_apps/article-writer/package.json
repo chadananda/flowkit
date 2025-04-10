@@ -1,0 +1,41 @@
+{
+  "name": "flowkit-article-writer",
+  "version": "1.0.0",
+  "description": "Generate high-quality articles with AI assistance",
+  "main": "article-writer.js",
+  "type": "module",
+  "bin": {
+    "article-writer": "./cli.js"
+  },
+  "scripts": {
+    "start": "node cli.js",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "flowkit",
+    "article",
+    "writer",
+    "ai",
+    "content"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chadananda/flowkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chadananda/flowkit/issues"
+  },
+  "homepage": "https://github.com/chadananda/flowkit/tree/main/example_apps/article-writer#readme",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "dotenv": "^16.3.1",
+    "figlet": "^1.7.0",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "vitest": "^1.6.1"
+  }
+}

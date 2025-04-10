@@ -1,0 +1,28 @@
+{
+  "name": "ocr_pdf",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "ocr": "node index.js"
+  },
+  "keywords": [
+    "ocr",
+    "pdf",
+    "flowkit",
+    "example"
+  ],
+  "author": "Chad Jones <chadananda@gmail.com> (http://bahai-education.org/)",
+  "license": "ISC",
+  "description": "OCR PDF example app using Flowkit framework",
+  "dependencies": {
+    "@google-cloud/vision": "^5.1.0",
+    "axios": "^1.8.4",
+    "chalk": "^5.4.1",
+    "dotenv": "^16.4.7",
+    "pdfjs-dist": "^5.1.91",
+    "tesseract.js": "^6.0.1"
+  }
+}

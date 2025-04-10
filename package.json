@@ -1,0 +1,33 @@
+{
+  "name": "flowkit",
+  "version": "1.0.0",
+  "description": "A Minimal, Composable, and Powerful JS Framework for Building Multi-Component Programs (MCPs)",
+  "main": "flowkit.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "ocr-pdf": "node example_apps/ocr-pdf/index.js",
+    "article-writer": "node example_apps/article-writer/index.js"
+  },
+  "keywords": [
+    "flow",
+    "framework",
+    "llm",
+    "agent",
+    "composable"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chadananda/flowkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chadananda/flowkit/issues"
+  },
+  "homepage": "https://github.com/chadananda/flowkit#readme",
+  "devDependencies": {
+    "vitest": "^3.1.1"
+  }
+}
