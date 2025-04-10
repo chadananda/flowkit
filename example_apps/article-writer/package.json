@@ -2,13 +2,13 @@
   "name": "flowlite-article-writer",
   "version": "1.0.0",
   "description": "Generate high-quality articles with AI assistance",
-  "main": "article-writer.js",
+  "main": "index.js",
   "type": "module",
   "bin": {
-    "article-writer": "./cli.js"
+    "article-writer": "./index.js"
   },
   "scripts": {
-    "start": "node cli.js",
+    "start": "node index.js",
     "test": "vitest run"
   },
   "keywords": [

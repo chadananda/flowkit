@@ -1,8 +1,12 @@
 {
-  "name": "ocr_pdf",
+  "name": "flowlite-ocr-pdf",
   "version": "1.0.0",
+  "description": "OCR PDF example app using Flowlite framework",
   "main": "index.js",
   "type": "module",
+  "bin": {
+    "ocr-pdf": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
@@ -11,17 +15,18 @@
   "keywords": [
     "ocr",
     "pdf",
-    "flowkit",
+    "flowlite",
     "example"
   ],
   "author": "Chad Jones <chadananda@gmail.com> (http://bahai-education.org/)",
-  "license": "ISC",
-  "description": "OCR PDF example app using Flowkit framework",
+  "license": "MIT",
   "dependencies": {
     "@google-cloud/vision": "^5.1.0",
     "axios": "^1.8.4",
+    "canvas": "^2.11.2",
     "chalk": "^5.4.1",
     "dotenv": "^16.4.7",
+    "figlet": "^1.7.0",
     "pdfjs-dist": "^5.1.91",
     "tesseract.js": "^6.0.1"
   }

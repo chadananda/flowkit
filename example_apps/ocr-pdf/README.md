@@ -1,6 +1,6 @@
 # OCR PDF Example App
 
-This is an example application built with the Flowkit framework that demonstrates how to create a PDF OCR processing pipeline.
+This is an example application built with the Flowlite framework that demonstrates how to create a PDF OCR processing pipeline.
 
 ## Features
 
@@ -13,6 +13,33 @@ This is an example application built with the Flowkit framework that demonstrate
 - Reconcile results using Claude API (placeholder)
 - Generate a new PDF with the extracted text
 - Parallel processing of PDF pages
+
+## Flow Architecture
+
+```ditaa
++---------------+      +---------------+      +---------------+
+| Input PDF     |----->| Load PDF      |----->| Extract Pages |
+|               |      |               |      |               |
++---------------+      +---------------+      +---------------+
+                                                     |
+                                                     v
+                                             +---------------+
+                                             | Process Pages |
+                                             | (Parallel)    |
+                                             +---------------+
+                                                     |
+                                                     v
++---------------+      +---------------+      +---------------+
+| Output PDF    |<-----| Merge Pages   |<-----| OCR Processing|
+|               |      |               |      | Pipeline      |
++---------------+      +---------------+      +---------------+
+                                                     ^
+                                                     |
+                       +---------------+      +---------------+
+                       | Reconcile     |<-----| Multiple OCR  |
+                       | Results       |      | Engines       |
+                       +---------------+      +---------------+
+```
 
 ## Setup
 
@@ -40,7 +67,7 @@ This is an example application built with the Flowkit framework that demonstrate
 Run the OCR tool with:
 
 ```
-npm run ocr ./input.pdf ./output.pdf
+npm start ./input.pdf ./output.pdf
 ```
 
 Or directly with:
@@ -49,10 +76,15 @@ Or directly with:
 node index.js ./input.pdf ./output.pdf
 ```
 
-From the parent directory, you can also run:
+## Project Structure
 
 ```
-npm run ocr ./input.pdf ./output.pdf
+ocr-pdf/
+├── ocr-pdf.flow.js     # Flow definition and tool implementations
+├── index.js            # CLI interface
+├── utils.js            # Utility functions
+├── package.json        # Project configuration
+└── .env                # Environment variables
 ```
 
 ## Output
@@ -68,11 +100,55 @@ The tool will display progress information:
 
 ## Implementation Notes
 
-This example demonstrates several Flowkit features:
-- Linear flows with `Flow.start().next()`
-- Parallel processing with `.all([])`
-- Batch processing with `mapReduce()`
-- Tool registration with `.tools([])`
-- Shared state management
+This example demonstrates several Flowlite features:
+
+### Ultra-Compact Tool Definitions
+
+```javascript
+// Ultra-compact tool definition using class expression
+const tesseractOCRTool = new class extends Tool {
+  constructor() {
+    super({
+      name: 'ocrTesseract',
+      description: 'Extract text using Tesseract OCR',
+      input: [
+        param('page', ParamType.OBJECT, 'PDF page object'),
+        param('pageNum', ParamType.NUMBER, 'Page number')
+      ]
+    });
+  }
+  
+  async execute({ page, pageNum }) {
+    // Implementation...
+  }
+}();
+```
+
+### Elegant Flow Composition
+
+```javascript
+// Ultra-compact OCR PDF flow
+export const ocrPDFFlow = Flow.create({
+  name: 'ocrPDF',
+  input: [
+    param('inputPath', ParamType.STRING, 'Input PDF path'),
+    param('outputPath', ParamType.STRING, 'Output PDF path')
+  ]
+})
+.next(async ({ inputPath, outputPath }) => {
+  // Load the PDF...
+})
+.next(async (state) => {
+  // Process pages in parallel...
+});
+```
+
+### Key Patterns Demonstrated
+
+- Class-based tool inheritance with `Tool`, `APITool`, and `LLMTool`
+- Parallel processing with `Promise.all()`
+- Chainable configuration with `withApiKey()` and other methods
+- Structured error handling and logging
+- Clean separation of flow logic from CLI interface
 
 Some OCR integrations are implemented as placeholders and would need to be completed for production use.

@@ -97,18 +97,80 @@ The article writer demonstrates Flowlite's powerful chainable workflow capabilit
 
 ## Flow Implementation
 
-The application showcases Flowlite's elegant chaining capabilities:
+The application showcases Flowlite's ultra-compact class-based architecture and elegant flow chaining:
+
+```ditaa
++---------------+      +---------------+      +---------------+
+| Input         |----->| Research      |----->| Create        |
+| Parameters    |      | Topic         |      | Outline       |
++---------------+      +---------------+      +---------------+
+                                                     |
+                                                     v
+                                             +---------------+
+                                             | SEO &         |
+                                             | Copywriting   |
+                                             | Checks        |
+                                             +---------------+
+                                                     |
+                                                     v
++---------------+      +---------------+      +---------------+
+| Save to       |<-----| SEO &         |<-----| Generate      |
+| Disk          |      | Copywriting   |      | Article       |
++---------------+      | Optimization  |      | Content       |
+                       +---------------+      +---------------+
+```
+
+The flow is implemented using Flowlite's ultra-compact approach:
 
 ```javascript
-Flow.start(analyzeRequest)
-  .next(performResearch)
-  .next(createOutline)
-  .next(checkOutlineSEO)
-  .next(checkOutlineCopywriting)
-  .next(writeArticle)
-  .next(checkContentCopywriting)
-  .next(checkContentSEO)
-  .next(finalizeArticle)
+// Ultra-compact tool definition using class expression
+const researchTool = new class extends APITool {
+  constructor() {
+    super({
+      name: 'researchWithPerplexity',
+      description: 'Research a topic using Perplexity API',
+      input: [
+        param('topic', ParamType.STRING, 'Topic to research'),
+        param('keywords', ParamType.ARRAY, 'Keywords to include', { optional: true })
+      ]
+    });
+    this.withApiKey('PERPLEXITY_API_KEY');
+  }
+  
+  async execute({ topic, keywords = [] }) {
+    // Implementation...
+  }
+}();
+
+// Ultra-compact flow definition
+export const articleWriterFlow = Flow.create({ 
+  name: 'articleWriter',
+  input: [
+    param('title', ParamType.STRING, 'Article title'),
+    // Other parameters...
+  ]
+})
+.next(async (state) => {
+  // Analyze request...
+})
+.next(async (state) => {
+  // Research topic...
+})
+// Additional flow steps...
+.next(async (state) => {
+  // Save article...
+});
+```
+
+## Project Structure
+
+```
+article-writer/
+├── article-writer.flow.js  # Flow definition and tool implementations
+├── index.js                # CLI interface
+├── package.json            # Project configuration
+├── articles/               # Generated articles
+└── tests/                  # Test files
 ```
 
 ## Environment Variables
