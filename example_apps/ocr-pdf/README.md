@@ -1,6 +1,10 @@
 # OCR PDF
 
-A powerful PDF OCR tool built with Flowlite that extracts text from PDF documents using multiple AI-powered OCR engines, reconciles the results for maximum accuracy, and outputs both a searchable PDF and structured Markdown file.
+I used to use an OCR voting voting engine to improve accuracy of OCR results. It was very expensive and time consuming. I have thousands of PDF books which badly need re-OCRed. Sine most OCR errors are due the lack of context. I was quickly able to test this theory by creating a rolling context object to help improve accuracy of existing files generated with OCR. And it worked wonders!!
+
+So what if we combined the best OCR engines with the best context extraction with the best LLM thinking models to essentially consider context and vote on the best OCR results. This is perhaps the world's first AI OCR voting engine. And a great test for the Flowlite library, who's task it is to chain LLM and API calls together.
+
+As a final touch, it outputs clean Markdown documents which have disambiguation context embedded as semantic XHTML tags making them extremely searchable for both RAG and keyword search systems. Also, we output a PDF/A version of the original document with high-quality embedded text.
 
 ## Features
 
@@ -81,39 +85,63 @@ The OCR-PDF application follows this sequence of operations:
 graph TD
     A[Input PDF] --> B[Setup Tool]
     B -->|Creates temp directories| C[Split PDF Tool]
-    C -->|Creates individual page PDFs| D[OCR Processing]
+    C -->|Splits into individual pages| D[Page Distribution]
     
-    subgraph "OCR Processing"
-        D1[Mistral OCR Tool] 
-        D2[Google Vision OCR Tool]
-        D3[ABBYY OCR Tool]
-        D4[Initial Context Tool]
+    %% Page Distribution to Parallel OCR Engines
+    D --> D1[Page 1]
+    D --> D2[Page 2]
+    D --> D3[Page 3]
+    D --> D4[Page N]
+    
+    %% Parallel OCR Processing for each page
+    subgraph "Parallel OCR Processing"
+        %% Page 1 Processing
+        D1 --> E1[Mistral OCR]
+        D1 --> F1[Google Vision OCR]
+        D1 --> G1[ABBYY OCR]
+        
+        %% Page 2 Processing
+        D2 --> E2[Mistral OCR]
+        D2 --> F2[Google Vision OCR]
+        D2 --> G2[ABBYY OCR]
+        
+        %% Page 3 Processing
+        D3 --> E3[Mistral OCR]
+        D3 --> F3[Google Vision OCR]
+        D3 --> G3[ABBYY OCR]
+        
+        %% Page N Processing
+        D4 --> E4[Mistral OCR]
+        D4 --> F4[Google Vision OCR]
+        D4 --> G4[ABBYY OCR]
     end
     
-    D --> D1
-    D --> D2
-    D --> D3
-    D --> D4
+    %% Results Collection
+    E1 & F1 & G1 --> H1[Page 1 Results]
+    E2 & F2 & G2 --> H2[Page 2 Results]
+    E3 & F3 & G3 --> H3[Page 3 Results]
+    E4 & F4 & G4 --> H4[Page N Results]
     
-    D1 -->|OCR Results| E[Page OCR Tool]
-    D2 -->|OCR Results| E
-    D3 -->|OCR Results| E
-    D4 -->|Initial Context| F[Claude Context Tool]
+    %% Context Extraction
+    D --> I[Initial Context Tool]
+    I -->|Document Context| J[Claude Context Tool]
     
-    E -->|Combined OCR Results| G[Page Reconciliation Tool]
-    F -->|Structured Context| G
+    %% Results Reconciliation
+    H1 & H2 & H3 & H4 --> K[Page Reconciliation Tool]
+    J --> K
     
-    G -->|Reconciled Text| H[Add Context Tool]
-    H -->|Enhanced Markdown| I[Generate Output Tool]
+    %% Output Generation
+    K -->|Reconciled Text| L[Add Context Tool]
+    L -->|Enhanced Markdown| M[Generate Output Tool]
     
-    I --> J1[PDF/A Assembly Tool]
-    I --> J2[Package MD Tool]
+    M --> N1[PDF/A Assembly Tool]
+    M --> N2[Package MD Tool]
     
-    J1 -->|Searchable PDF/A| K[Save Output Tool]
-    J2 -->|Markdown Package| K
+    N1 -->|Searchable PDF/A| O[Save Output Tool]
+    N2 -->|Markdown Package| O
     
-    K -->|Saved Output Files| L[Cleanup Tool]
-    L -->|Temporary Files Removed| M[Complete]
+    O -->|Saved Output Files| P[Cleanup Tool]
+    P -->|Temporary Files Removed| Q[Complete]
 ```
 
 ## How Each Stage Works
