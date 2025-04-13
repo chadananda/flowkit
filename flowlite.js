@@ -3,171 +3,26 @@
  * Inspired by functional programming and modern ES6+ features
  */
 
-// Enum for log levels
-export const LogLevel = { NONE: 0, ERROR: 1, WARN: 2, INFO: 3, DEBUG: 4, TRACE: 5 };
+// Import constants from constants.js
+import { LogLevel, ParamType, param, goto, apiKey } from './constants.js';
 
-// Parameter type definitions
-export const ParamType = { STRING: 'string', NUMBER: 'number', BOOLEAN: 'boolean', OBJECT: 'object', ARRAY: 'array', ANY: 'any' };
+// Export constants for convenience
+export { LogLevel, ParamType, param, goto, apiKey };
 
-// Helper for creating parameter definitions
-export const param = (name, type, description, optional = false) => ({ name, type, description, optional });
-
-// Helper for creating goto instructions
-export const goto = (nodeId) => ({ _goto: nodeId });
-
-// Helper for defining API keys
-export const apiKey = (name, description, required = true) => ({ name, description, required });
-
-// Base Tool class - all tools inherit from this
-export class Tool {
-  constructor(metadata = {}) {
-    this.metadata = {
-      name: metadata.name || 'unnamed_tool',
-      description: metadata.description || 'No description provided',
-      input: metadata.input || [],
-      output: metadata.output || [],
-      examples: metadata.examples || [],
-      apiKeys: metadata.apiKeys || [],
-      tags: metadata.tags || []
-    };
-    this.stats = { calls: 0, errors: 0, totalTime: 0 };
-    this.logLevel = metadata.logLevel || LogLevel.INFO;
-    this.logger = metadata.logger || console;
-    this.startTime = 0;
-  }
-
-  // Chainable configuration methods
-  setLogLevel = (level) => { this.logLevel = level; return this; };
-  setLogger = (logger) => { this.logger = logger; return this; };
-  withApiKey = (name, description, required = true) => { 
-    this.metadata.apiKeys.push(apiKey(name, description, required)); 
-    return this; 
-  };
-  withExample = (input, output) => { 
-    this.metadata.examples.push({ input, output }); 
-    return this; 
-  };
-  withTag = (tag) => { 
-    this.metadata.tags.push(tag); 
-    return this; 
-  };
-
-  // Logging methods
-  log = (message, ...args) => this.logger.log(message, ...args);
-  error = (message, ...args) => this.logLevel >= LogLevel.ERROR && this.logger.error(message, ...args);
-  warn = (message, ...args) => this.logLevel >= LogLevel.WARN && this.logger.warn(message, ...args);
-  info = (message, ...args) => this.logLevel >= LogLevel.INFO && this.logger.info(message, ...args);
-  debug = (message, ...args) => this.logLevel >= LogLevel.DEBUG && this.logger.debug(message, ...args);
-  trace = (message, ...args) => this.logLevel >= LogLevel.TRACE && this.logger.trace(message, ...args);
-
-  // Statistics methods
-  getStats = () => ({ 
-    ...this.stats, 
-    avgTime: this.stats.calls ? this.stats.totalTime / this.stats.calls : 0,
-    errorRate: this.stats.calls ? this.stats.errors / this.stats.calls : 0
-  });
-  resetStats = () => { this.stats = { calls: 0, errors: 0, totalTime: 0 }; return this; };
-
-  // Core execution method - must be implemented by subclasses
-  async execute(input) { throw new Error('Tool.execute() must be implemented by subclass'); }
-
-  // Call method - handles statistics and logging
-  async call(input) {
-    this.stats.calls++;
-    this.startTime = performance.now();
-    
-    try {
-      this.debug(`[${this.metadata.name}] Executing with input:`, input);
-      const result = await this.execute(input);
-      const duration = performance.now() - this.startTime;
-      this.stats.totalTime += duration;
-      this.debug(`[${this.metadata.name}] Completed in ${duration.toFixed(2)}ms`);
-      return result;
-    } catch (error) {
-      this.stats.errors++;
-      this.error(`[${this.metadata.name}] Error:`, error);
-      throw error;
-    }
-  }
-
-  // Convert tool to a function with metadata
-  asFunction() {
-    const fn = async input => await this.call(input);
-    fn.metadata = this.metadata;
-    return fn;
-  }
-}
-
-// LLM Tool class - specialized for LLM interactions
-export class LLMTool extends Tool {
-  constructor(metadata = {}) {
-    super({
-      ...metadata,
-      apiKeys: [...(metadata.apiKeys || []), apiKey('OPENAI_API_KEY', 'OpenAI API Key')]
-    });
-  }
-
-  async execute(input) {
-    // Validate API keys
-    if (!process.env.OPENAI_API_KEY) {
-      throw new Error('OPENAI_API_KEY is required for LLM tools');
-    }
-    
-    // Process the prompt and call the LLM API
-    const prompt = typeof input === 'string' ? input : input.prompt;
-    // This would be replaced with actual API call in production
-    return `Simulated LLM response for: ${prompt}`;
-  }
-}
-
-// API Tool class - specialized for external API calls
-export class APITool extends Tool {
-  constructor(metadata = {}) {
-    super(metadata);
-    this.retries = metadata.retries || 1;
-    this.retryDelay = metadata.retryDelay || 1000;
-  }
-
-  async execute(input) {
-    const { url, options = {} } = input;
-    let attempt = 0;
-    let error;
-
-    while (attempt <= this.retries) {
-      try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          throw new Error(`API returned error status: ${response.status}`);
-        }
-        return await response.json();
-      } catch (err) {
-        error = err;
-        attempt++;
-        if (attempt <= this.retries) {
-          this.warn(`[${this.metadata.name}] API call failed, retrying in ${this.retryDelay}ms (${attempt}/${this.retries}):`, err);
-          await new Promise(r => setTimeout(r, this.retryDelay));
-          this.retryDelay *= 2; // Exponential backoff
-        }
-      }
-    }
-    
-    throw error;
-  }
-}
+// Import the Tool class and FlowRegistry for the new approach
+import { Tool, flowRegistry } from './flowtools.js';
 
 // Node class - represents a step in the flow
 export class Node {
   constructor(fnOrTool, id, options = {}) {
     this.fn = fnOrTool;
     this.id = id || `node_${Math.random().toString(36).substring(2, 9)}`;
-    this.name = options.name || (fnOrTool instanceof Tool ? fnOrTool.metadata.name : 
-      (typeof fnOrTool === 'function' ? fnOrTool.name : 'unnamed_node'));
+    this.name = options.name || (fnOrTool.metadata ? fnOrTool.metadata.name : this.id);
+    this.description = options.description || (fnOrTool.metadata ? fnOrTool.metadata.description : '');
     this.outcomes = new Map();
-    this.stats = { runs: 0, errors: 0, totalTime: 0 };
+    this.outcomes.set('default', options.next || null);
     this.maxRuns = options.maxRuns || Infinity;
     this.runCount = 0;
-    this.logLevel = options.logLevel || LogLevel.INFO;
-    this.logger = options.logger || console;
   }
 
   // Add a default next node
@@ -190,34 +45,27 @@ export class Node {
 
   // Execute the node function with the current state
   async run(state) {
-    if (this.maxRuns > 0 && this.runCount >= this.maxRuns) {
-      throw new Error(`max runs (${this.maxRuns})`);
+    if (this.runCount >= this.maxRuns) {
+      throw new Error(`Node ${this.name} (${this.id}) has reached maximum runs (${this.maxRuns})`);
     }
     
-    this.stats.runs++;
     this.runCount++;
-    const startTime = performance.now();
     
-    try {
-      // Handle different types of node functions
-      let result;
-      
-      if (this.fn instanceof Tool) {
-        result = await this.fn.call(state);
-      } else if (typeof this.fn === 'function') {
-        result = await this.fn(state);
-      } else {
-        result = this.fn;
-      }
-      
-      const duration = performance.now() - startTime;
-      this.stats.totalTime += duration;
-      
-      return result;
-    } catch (error) {
-      this.stats.errors++;
-      throw error;
+    // Ensure state is always an object
+    const safeState = state || {};
+    
+    // If the function is a Tool instance, call it with the state
+    if (this.fn.call && typeof this.fn.call === 'function') {
+      return await this.fn.call(safeState);
     }
+    
+    // If the function has metadata, it's a tool function
+    if (this.fn.metadata) {
+      return await this.fn(safeState);
+    }
+    
+    // Otherwise, it's a regular function
+    return await this.fn(safeState);
   }
 }
 
@@ -228,26 +76,45 @@ export class Flow {
       name: metadata.name || 'unnamed_flow',
       description: metadata.description || '',
       input: metadata.input || [],
-      output: metadata.output || []
+      output: metadata.output || [],
+      apiKeys: metadata.apiKeys || []
     };
-    
     this.nodes = new Map();
     this.startNodeId = null;
     this.lastNodeId = null;
+    this.stats = { 
+      runs: 0, 
+      errors: 0, 
+      totalTime: 0,
+      nodeStats: {}
+    };
     this.logLevel = metadata.logLevel || LogLevel.INFO;
     this.logger = metadata.logger || console;
-    this.stats = { runs: 0, errors: 0, totalTime: 0, nodeStats: {} };
+    
+    // For the new tool-centric approach
+    this.toolChain = null;
+    this.flowId = `flow_${Math.random().toString(36).substring(2, 9)}`;
   }
-
+  
   // Static factory methods
   static create(metadata = {}) {
     return new Flow(metadata);
   }
-
+  
   static start(fnOrTool, options = {}) {
-    return new Flow().next(fnOrTool, options);
+    const flow = new Flow(options);
+    flow.start(fnOrTool, options);
+    return flow;
   }
-
+  
+  // Chainable configuration methods
+  setLogLevel = (level) => { this.logLevel = level; return this; };
+  setLogger = (logger) => { this.logger = logger; return this; };
+  withApiKey = (name, description, required = true) => { 
+    this.metadata.apiKeys.push(apiKey(name, description, required)); 
+    return this; 
+  };
+  
   // Logging methods
   log = (message, ...args) => this.logger.log(message, ...args);
   error = (message, ...args) => this.logLevel >= LogLevel.ERROR && this.logger.error(message, ...args);
@@ -255,110 +122,234 @@ export class Flow {
   info = (message, ...args) => this.logLevel >= LogLevel.INFO && this.logger.info(message, ...args);
   debug = (message, ...args) => this.logLevel >= LogLevel.DEBUG && this.logger.debug(message, ...args);
   trace = (message, ...args) => this.logLevel >= LogLevel.TRACE && this.logger.trace(message, ...args);
-
+  
   // Statistics methods
   getStats = () => ({ 
     ...this.stats, 
     avgTime: this.stats.runs ? this.stats.totalTime / this.stats.runs : 0,
     errorRate: this.stats.runs ? this.stats.errors / this.stats.runs : 0
   });
+  resetStats = () => { this.stats = { runs: 0, errors: 0, totalTime: 0, nodeStats: {} }; return this; };
   
-  resetStats = () => {
-    this.stats = { runs: 0, errors: 0, totalTime: 0, nodeStats: {} };
+  // Add a starting node to the flow
+  start(nodeOrFn, options = {}) {
+    const node = this.createNode(nodeOrFn, options);
+    this.startNodeId = node.id;
+    this.lastNodeId = node.id;
+    
+    // Initialize the tool chain with the first node
+    if (nodeOrFn instanceof Tool) {
+      this.toolChain = nodeOrFn;
+    } else {
+      // Create a tool from the function
+      this.toolChain = new Tool({
+        name: options.name || (typeof nodeOrFn === 'function' ? nodeOrFn.name : 'start_node'),
+        description: options.description || 'Start node of the flow'
+      }).withExecute(async (input) => await nodeOrFn(input));
+    }
+    
+    // Register the flow with the registry
+    flowRegistry.createSegment(this.flowId, this.toolChain);
+    
     return this;
-  };
-
-  // Configuration methods
-  setLogLevel = (level) => { this.logLevel = level; return this; };
-  setLogger = (logger) => { this.logger = logger; return this; };
-
+  }
+  
   // Add a node to the flow
   next(nodeOrFn, options = {}) {
+    // Traditional flow approach
     const node = this.createNode(nodeOrFn, options);
     
-    if (!this.startNodeId) {
-      this.startNodeId = node.id;
+    if (this.lastNodeId) {
+      const lastNode = this.nodes.get(this.lastNodeId);
+      lastNode.next(node.id);
     } else {
-      const prevNode = this.nodes.get(this.lastNodeId);
-      if (prevNode) {
-        prevNode.next(node.id);
-      }
+      this.startNodeId = node.id;
     }
     
     this.lastNodeId = node.id;
-    return this;
-  }
-
-  // Add conditional branch based on outcome
-  on(outcome, nodeOrFn, options = {}) {
-    const lastNode = this.nodes.get(this.lastNodeId);
-    if (!lastNode) {
-      throw new Error('No node to add outcome to');
+    
+    // Tool-centric approach
+    if (this.toolChain) {
+      if (nodeOrFn instanceof Tool) {
+        this.toolChain = this.toolChain.then(nodeOrFn);
+      } else {
+        // Create a tool from the function
+        const nextTool = new Tool({
+          name: options.name || (typeof nodeOrFn === 'function' ? nodeOrFn.name : 'next_node'),
+          description: options.description || 'Flow node'
+        }).withExecute(async (input) => await nodeOrFn(input));
+        
+        this.toolChain = this.toolChain.then(nextTool);
+      }
     }
     
+    return this;
+  }
+  
+  // Add conditional branch based on outcome
+  on(outcome, nodeOrFn, options = {}) {
     const node = this.createNode(nodeOrFn, options);
+    
+    if (!this.lastNodeId) {
+      throw new Error('Cannot add conditional branch without a previous node');
+    }
+    
+    const lastNode = this.nodes.get(this.lastNodeId);
     lastNode.on(outcome, node.id);
+    
+    // Tool-centric approach - implement using branch
+    if (this.toolChain) {
+      // Create a tool for this branch
+      let branchTool;
+      if (nodeOrFn instanceof Tool) {
+        branchTool = nodeOrFn;
+      } else {
+        branchTool = new Tool({
+          name: options.name || (typeof nodeOrFn === 'function' ? nodeOrFn.name : `branch_${outcome}`),
+          description: options.description || `Branch for outcome ${outcome}`
+        }).withExecute(async (input) => await nodeOrFn(input));
+      }
+      
+      // Create a segment for this branch
+      const branchId = `${this.flowId}_branch_${outcome}`;
+      flowRegistry.createSegment(branchId, branchTool);
+      
+      // Add branching logic to the current chain
+      this.toolChain = this.toolChain.branch(
+        (result) => result === outcome,
+        { _goto: branchId },
+        null
+      );
+    }
     
     return this;
   }
-
+  
   // Add parallel execution of multiple nodes
   all(nodesOrFns, options = {}) {
-    const mergeOption = options.merge === undefined ? true : options.merge;
-    
-    const parallelFn = async (state) => {
-      const results = await Promise.all(
-        nodesOrFns.map(async (nodeOrFn) => {
-          if (typeof nodeOrFn === 'function') {
-            return await nodeOrFn(state);
-          } else if (nodeOrFn instanceof Tool) {
-            return await nodeOrFn.call(state);
-          } else if (nodeOrFn instanceof Node) {
-            return await nodeOrFn.run(state);
-          }
-          return nodeOrFn;
-        })
-      );
-      
-      if (mergeOption) {
-        return results.reduce((acc, result) => ({ ...acc, ...result }), { ...state });
-      } else {
-        return { ...state, results };
-      }
-    };
-    
-    return this.next(parallelFn, { 
-      name: options.name || 'parallel', 
-      ...options 
-    });
+    const parallelFn = this.parallelFn(nodesOrFns);
+    return this.next(parallelFn, options);
   }
-
+  
+  parallelFn(nodesOrFns) {
+    return async (state) => {
+      const tasks = nodesOrFns.map(nodeOrFn => {
+        if (nodeOrFn instanceof Node) {
+          return nodeOrFn.run(state);
+        } else if (nodeOrFn instanceof Tool) {
+          return nodeOrFn.call(state);
+        } else if (typeof nodeOrFn === 'function') {
+          return nodeOrFn(state);
+        } else {
+          throw new Error('Invalid node or function in parallel execution');
+        }
+      });
+      
+      const results = await Promise.all(tasks);
+      
+      // Merge results if they are objects
+      const mergedResult = {};
+      for (const result of results) {
+        if (result && typeof result === 'object') {
+          Object.assign(mergedResult, result);
+        }
+      }
+      
+      return mergedResult;
+    };
+  }
+  
   // Convert flow to a Tool instance
   asTool(options = {}) {
-    const flowTool = new Tool({
+    const tool = new Tool({
       name: options.name || this.metadata.name,
       description: options.description || this.metadata.description,
       input: options.input || this.metadata.input,
       output: options.output || this.metadata.output,
-      ...options
+      apiKeys: options.apiKeys || this.metadata.apiKeys,
+      logLevel: options.logLevel || this.logLevel
     });
     
-    flowTool.execute = async (input) => {
+    // Set the execute method to run the flow
+    tool.execute = async (input) => {
+      // If we have a tool chain, use it
+      if (this.toolChain) {
+        return await this.toolChain.call(input);
+      }
+      
+      // Otherwise, fall back to the traditional flow execution
       return await this.run(input);
     };
     
+    return tool;
+  }
+  
+  // Convert to a tool chain
+  toToolChain() {
+    // Create a wrapper tool that will execute the flow
+    const flowTool = new Tool({
+      name: this.metadata.name,
+      description: this.metadata.description,
+      input: this.metadata.input,
+      output: this.metadata.output
+    });
+    
+    // Set the execute method to run the flow
+    flowTool.withExecute(async (input) => {
+      return await this.run(input);
+    });
+    
     return flowTool;
   }
+  
+  // Create a flow from a tool chain
+  static fromToolChain(toolChain, metadata = {}) {
+    // Create a new flow with the tool chain's metadata
+    const flow = new Flow({
+      name: toolChain.metadata.name,
+      description: toolChain.metadata.description,
+      input: toolChain.metadata.input,
+      output: toolChain.metadata.output,
+      ...metadata
+    });
+    
+    // Add a single node that executes the tool chain
+    flow.next(async (state) => {
+      return await toolChain.call(state);
+    });
+    
+    return flow;
+  }
 
+  execute(input) {
+    return this.run(input);
+  }
+  
   // Execute the flow with the given initial state
   async run(initialState = {}) {
-    this.info(`[${this.metadata.name}] Starting flow execution`);
-    this.stats.runs++;
-    
-    if (!this.startNodeId) {
-      throw new Error('Flow has no start node');
+    // If we have a tool chain, use it
+    if (this.toolChain) {
+      const startTime = performance.now();
+      try {
+        const result = await this.toolChain.call(initialState);
+        const duration = performance.now() - startTime;
+        this.stats.runs++;
+        this.stats.totalTime += duration;
+        this.info(`[${this.metadata.name}] Flow completed in ${duration.toFixed(2)}ms`);
+        return result;
+      } catch (error) {
+        this.stats.errors++;
+        this.error(`[${this.metadata.name}] Flow error:`, error);
+        throw error;
+      }
     }
     
+    // Traditional flow execution
+    if (!this.startNodeId) {
+      throw new Error('Flow has no starting node');
+    }
+    
+    this.stats.runs++;
     let state = { ...initialState };
     let currentNodeId = this.startNodeId;
     let steps = 0;
@@ -447,13 +438,6 @@ export class Flow {
   }
 }
 
-// Utility for creating a Tool from a function
-export const createTool = (fn, metadata = {}) => {
-  const tool = new Tool(metadata);
-  tool.execute = fn;
-  return tool;
-};
-
 // Map-reduce utility for processing collections
 export const mapReduce = (items, mapFn, reduceFn = null, options = {}) => {
   const { concurrency = Infinity } = options;
@@ -483,4 +467,22 @@ export const mapReduce = (items, mapFn, reduceFn = null, options = {}) => {
     
     return mappedResults;
   };
+};
+
+// Re-export all tools from flowtools.js
+export * from './flowtools.js';
+
+// Helper function to create a Tool from a function
+export const createTool = (fn, metadata = {}) => {
+  const tool = new Tool({
+    name: metadata.name || fn.name || 'anonymous_tool',
+    description: metadata.description || 'Tool created from function',
+    input: metadata.input || [],
+    output: metadata.output || [],
+    ...metadata
+  });
+  
+  tool.withExecute(fn);
+  
+  return tool;
 };

@@ -1,7 +1,7 @@
 /**
  * article-writer.flow.js - Ultra-compact flow for generating articles
  */
-import { Flow, Tool, APITool, LLMTool, param, ParamType, LogLevel } from 'flowlite';
+import { Flow, Tool, APITool, LLMTool, param, ParamType, LogLevel } from '../../../flowlite.js';
 import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import path from 'path';
@@ -15,7 +15,7 @@ const outputDir = path.join(__dirname, 'articles');
 export const isTestMode = process.env.NODE_ENV === 'test';
 
 // Ultra-compact tool definitions using class expressions
-const researchTool = new class extends APITool {
+export const researchTool = new class extends APITool {
   constructor() {
     super({
       name: 'researchWithPerplexity',
@@ -70,7 +70,7 @@ const researchTool = new class extends APITool {
   }
 }();
 
-const seoQualityTool = new class extends LLMTool {
+export const seoQualityTool = new class extends LLMTool {
   constructor() {
     super({
       name: 'checkSEOQuality',
@@ -107,7 +107,8 @@ JSON format: {"score": 7, "analysis": "Brief analysis", "improvements": ["Improv
         score: 8,
         analysis: 'Test SEO analysis',
         improvements: ['Test improvement'],
-        optimizedOutline: content
+        optimizedOutline: 'Test optimized outline',
+        optimizedContent: 'Test optimized content'
       };
     }
     
@@ -118,13 +119,14 @@ JSON format: {"score": 7, "analysis": "Brief analysis", "improvements": ["Improv
         score: 5,
         analysis: 'Failed to parse response',
         improvements: ['Check formatting'],
-        optimizedOutline: response
+        optimizedOutline: response,
+        optimizedContent: response
       };
     }
   }
 }();
 
-const copywritingQualityTool = new class extends LLMTool {
+export const copywritingQualityTool = new class extends LLMTool {
   constructor() {
     super({
       name: 'checkCopywritingQuality',
@@ -160,10 +162,11 @@ JSON format: {"score": 7, "analysis": "Brief analysis", "improvements": ["Improv
   processResponse(response) {
     if (isTestMode) {
       return {
-        score: 9,
+        score: 8,
         analysis: 'Test copywriting analysis',
         improvements: ['Test improvement'],
-        optimizedOutline: content
+        optimizedOutline: 'Test optimized outline',
+        optimizedContent: 'Improved content'
       };
     }
     
@@ -174,13 +177,14 @@ JSON format: {"score": 7, "analysis": "Brief analysis", "improvements": ["Improv
         score: 5,
         analysis: 'Failed to parse response',
         improvements: ['Check formatting'],
-        optimizedOutline: response
+        optimizedOutline: response,
+        optimizedContent: response
       };
     }
   }
 }();
 
-const saveToDiskTool = new class extends Tool {
+export const saveToDiskTool = new class extends Tool {
   constructor() {
     super({
       name: 'saveToDisk',

@@ -1,7 +1,7 @@
 {
   "name": "flowlite-article-writer",
   "version": "1.0.0",
-  "description": "AI-powered article generator using Flowlite",
+  "description": "AI-powered article writer using Flowlite",
   "main": "index.js",
   "type": "module",
   "bin": {
@@ -9,14 +9,15 @@
   },
   "scripts": {
     "start": "node index.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "article",
     "writer",
-    "ai",
     "flowlite",
-    "llm"
+    "ai",
+    "content-generation"
   ],
   "author": "Chad Jones <chadananda@gmail.com>",
   "license": "MIT",
@@ -26,9 +27,11 @@
     "dotenv": "^16.5.0",
     "figlet": "^1.7.0",
     "flowlite": "^1.0.1",
+    "inquirer": "^8.2.6",
+    "keytar": "^7.9.0",
     "node-fetch": "^3.3.2"
   },
   "devDependencies": {
-    "vitest": "^3.1.1"
+    "vitest": "^1.4.0"
   }
 }
